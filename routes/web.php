@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Artisan;
@@ -61,7 +62,7 @@ Route::group(
         Route::group(
             ["middleware" => "role:admin", 'auth'],
             function () {
-                // Admin routes here
+                Route::resource('categories', CategoryController::class);
             }
         );
     }
