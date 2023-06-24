@@ -18,7 +18,5 @@
     @yield('styles')
 </head>
 
-<body id="page-top">
-    <!-- Page Wrapper -->
-    <div id="wrapper">
+<body id="page-top" class="bg-light">
 
