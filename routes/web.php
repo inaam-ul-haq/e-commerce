@@ -47,22 +47,22 @@ Route::get('/user/signup', [RegisterController::class, 'showRegistrationForm'])-
 Route::post('/user/signup', [RegisterController::class, 'register']);
 
 Route::group(
-    ['prefix' => "/auth/", "middleware" => ["auth", 'checkMail']],
+    ['prefix' => "dashboard", "middleware" => ["auth", 'checkMail']],
     function () {
-        Route::get('', [HomeController::class, 'index'])->name('auth');
-        Route::get('dashboard', [HomeController::class, 'index'])->name('dashboard');
+        Route::get('/', [HomeController::class, 'index'])->name('auth');
 
         Route::get('my-profile', [UserController::class, 'editprofile'])->name('myprofile');
         Route::put('edit-my-profile', [UserController::class, 'updatemyprofile'])->name('updatemyprofile');
 
         // change password
-        Route::get('/settings', [HomeController::class, 'changePassword'])->name('change_password');
-        Route::post('/change-password/update', [HomeController::class, 'updatePassword'])->name('update_password');
+        Route::get('settings', [HomeController::class, 'changePassword'])->name('change_password');
+        Route::post('change-password/update', [HomeController::class, 'updatePassword'])->name('update_password');
 
         Route::group(
-            ["middleware" => "role:admin", 'auth'],
+            ["middleware" => "role:admin"],
             function () {
                 Route::resource('categories', CategoryController::class);
+                Route::post('/categories/{category}/toggle-status', [CategoryController::class, 'toggleStatus'])->name('categories.toggleStatus');
             }
         );
     }

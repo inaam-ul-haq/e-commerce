@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 
@@ -19,19 +18,9 @@ class UserSeeder extends Seeder
         // Reset cached roles and permissions
         app()['cache']->forget('spatie.permission.cache');
 
-        // create permissions
-        Permission::create(['name' => 'edit articles']);
-        Permission::create(['name' => 'delete articles']);
-        Permission::create(['name' => 'publish articles']);
-        Permission::create(['name' => 'unpublish articles']);
-
-        // create roles and assign created permissions
-
-        $role = Role::create(['name' => 'admin']);
-        $role->givePermissionTo([Permission::all()]);
-
-        $role = Role::create(['name' => 'user']);
-        $role->givePermissionTo(Permission::all());
+        // create roles
+        Role::create(['name' => 'admin']);
+        Role::create(['name' => 'user']);
 
         $user1 = new User;
         $user1->name = 'Admin';

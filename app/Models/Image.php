@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Category extends Model
+class Image extends Model
 {
     use HasFactory, HasUuids;
 
@@ -15,18 +15,10 @@ class Category extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = ['name'];
+    protected $guarded = [];
 
-    public function getStatusAttribute($value)
+    public function imagable()
     {
-        return $value == 1 ? 'Active' : 'in-active';
-    }
-
-    /**
-     * Category images relationship
-     */
-    public function Images()
-    {
-        return $this->morphOne(Image::class, 'imagable');
+        return $this->morphTo();
     }
 }

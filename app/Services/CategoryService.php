@@ -3,11 +3,13 @@
 namespace App\Services;
 
 use App\Helper\BaseQuery;
+use App\Helper\ImageUpload;
 use App\Models\Category;
 
 class CategoryService
 {
-    use BaseQuery;
+    use BaseQuery, ImageUpload;
+    private $_imgPath = 'categories/';
 
     private $_model = null;
 
@@ -34,15 +36,33 @@ class CategoryService
      */
     public function store($data)
     {
-        return $this->add($this->_model, $data);
+        $category = $this->add($this->_model, $data);
+
+        $imagesToUpload = [];
+
+        if (request()->hasFile('images')) {
+            foreach ($data['images'] as $value) {
+                $imageUploaded = $this->uploadImage($value, $this->_imgPath);
+                // $imageUploaded['imagable_id'] = $category->getKey(); // Use UUID of category
+                // $imageUploaded['imagable_type'] = 'App\Models\Category'; // Set the imagable_type to the correct class name
+                // $imagesToUpload[] = $imageUploaded;
+                $category->Images()->create($imageUploaded);
+            }
+
+            // Use createMany() instead of create() within the loop
+            $category->Images()->createMany($imagesToUpload);
+        }
+
+        return true;
     }
+
 
     /**
      * Display the specified resource.
      */
     public function show($id)
     {
-        return $this->get_by_slug($this->_model, $id);
+        return $this->get_by_id($this->_model, $id);
     }
 
     /**
@@ -50,7 +70,7 @@ class CategoryService
      */
     public function update($id, $data)
     {
-        return $this->get_by_slug($this->_model, $id)->update($data);
+        return $this->get_by_id($this->_model, $id)->update($data);
     }
 
     /**
@@ -59,5 +79,17 @@ class CategoryService
     public function destroy($id)
     {
         return $this->delete($this->_model, $id);
+    }
+
+    /**
+     * Change status of category to active or inactive
+     */
+    public function toggleStatus()
+    {
+        $category = $this->get_by_id($this->_model, request()->category);
+        $category->status = $category->status === 'Active' ? 0 : 1;
+        $category->update();
+
+        return true;
     }
 }

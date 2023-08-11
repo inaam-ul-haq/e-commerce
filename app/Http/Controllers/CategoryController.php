@@ -100,4 +100,10 @@ class CategoryController extends Controller
         $this->_service->destroy($id);
         return redirect()->route($this->_route . '.index');
     }
+
+    public function toggleStatus()
+    {
+        $this->_service->toggleStatus();
+        return redirect()->route($this->_route . '.index');
+    }
 }
