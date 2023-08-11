@@ -1,4 +1,4 @@
-<div class='input-group has-validation'>
+<div class='input-group has-validation mb-3'>
     <input type='{{ $type }}' class='form-control {{$extraclasses}} @error($name) is-invalid @enderror' id='{{ $id }}'
         name='{{ $name }}' placeholder='{{ $place }}' {{$extraAttributes}} {{ $required == null ? '' : 'required' }}
         value='{{ $val == '' ? old($name) : $val }}'>
